@@ -25,10 +25,10 @@ GBJam.Preloader.prototype = {
         this.load.setPreloadSprite(this.progressBar);
 
         //        Here we load most of the assets our game needs
-        this.load.image('titlepage', 'images/title.jpg');
-        this.load.atlas('playButton', 'images/play_button.png', 'images/play_button.json');
-        this.load.audio('titleMusic', ['audio/main_menu.mp3']);
-        this.load.bitmapFont('caslon', 'fonts/caslon.png', 'fonts/caslon.xml');
+        //this.load.image('titlepage', 'images/title.jpg');
+        //this.load.atlas('playButton', 'images/play_button.png', 'images/play_button.json');
+        this.load.audio('titleMusic', ['./bin/audio/bgm.mp3']);
+        //this.load.bitmapFont('04b', './bin/fonts/04b_0.png', './bin/fonts/04b.xml');
         //        + lots of other required assets here
 
     },
