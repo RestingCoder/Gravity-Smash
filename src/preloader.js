@@ -13,14 +13,16 @@ GBJam.Preloader.prototype = {
 
         //        These are the assets we loaded in Boot.js
         //        A nice sparkly background and a loading progress bar
-        this.background = this.add.sprite(0, 0, 'preloaderBackground');
-        this.preloadBar = this.add.sprite(this.game.world.centerX, this.game.world.centerY, 'preloaderBar');
-        this.preloadBar.anchor.setTo(0.5,0.5);
+        this.background = this.add.sprite(0, 0, 'mainBackground');
+        this.progressBackground = this.add.sprite(this.game.world.centerX, this.game.world.centerY + 31, 'progressBackground');
+        this.progressBar = this.add.sprite(20, this.game.world.centerY + 35, 'progressBar');
+        this.progressBackground.anchor.setTo(0.5,0.5);
+        this.progressBar.anchor.setTo(0,0.5);
 
         //        This sets the preloadBar sprite as a loader sprite, basically
         //        what that does is automatically crop the sprite from 0 to full-width
         //        as the files below are loaded in.
-        this.load.setPreloadSprite(this.preloadBar);
+        this.load.setPreloadSprite(this.progressBar);
 
         //        Here we load most of the assets our game needs
         this.load.image('titlepage', 'images/title.jpg');
@@ -34,7 +36,7 @@ GBJam.Preloader.prototype = {
     create: function () {
 
         //        Once the load has finished we disable the crop because we're going to sit in the update loop for a short while
-        this.preloadBar.cropEnabled = false;
+        this.progressBar.cropEnabled = false;
 
     },
 
