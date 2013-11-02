@@ -17,7 +17,7 @@
 
     window.onload = function() {
 
-        var game = new Phaser.Game(160, 144, Phaser.AUTO, 'gameContainer');
+        var game = new Phaser.Game(160, 144, Phaser.CANVAS, 'gameContainer', false);
 
         game.state.add('Boot', GBJam.Boot);
         game.state.add('Preloader', GBJam.Preloader);
