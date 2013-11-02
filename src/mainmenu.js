@@ -13,7 +13,8 @@ GBJam.MainMenu.prototype = {
         //this.music.play('', 0, 1, true);
 
         this.add.sprite(0, 0, 'mainBackground');
-        this.game.input.onDown.add(this.startGame, this);
+
+        this.game.input.keyboard.onDownCallback = this.startGame;
 
         //text = this.add.bitmapText(100, 100, 'test', { font: '8px 04b', align: 'center' });
 
@@ -28,7 +29,7 @@ GBJam.MainMenu.prototype = {
     startGame: function (pointer) {
 
         //this.music.stop();
-
+        this.game.input.keyboard.onDownCallback = null;
         this.game.state.start('Game');
 
     }
