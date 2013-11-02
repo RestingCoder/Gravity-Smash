@@ -2,10 +2,6 @@ GBJam.Game = function (game) {
 
 };
 
-// screen height, used for moving the camera to screens 0, 1, and 2.
-var SH = 144;
-var test = 424;
-
 GBJam.Game.prototype = {
 
     create: function () {
@@ -14,53 +10,41 @@ GBJam.Game.prototype = {
         score = 0;
         launched = false;
 
-        this.game.world.setBounds(0, 0, 160, 432);
+        this.game.world.setBounds(0, 0, 160, 144);
         table = this.game.add.sprite(0,0,'table');
-        ball = this.game.add.sprite(153, SH * 2 + 400, 'ball');
-        paddle = this.game.add.sprite(this.game.world.centerX, 500, 'paddle');
-        paddle2 = this.game.add.sprite(this.game.world.centerX, 285, 'paddle');
+        ball = this.game.add.sprite(0, 0, 'ball');
+        paddle = this.game.add.sprite(this.game.world.centerX, 130, 'paddle');
 
-        scoreText = this.game.add.text(this.game.world.centerX,300,'Score: ' + score.toString(),{ font: "12px Arial", fill: "#ff0044", align: "right" });
+        scoreText = this.game.add.text(this.game.world.centerX, this.game.world.centerY - 30,'Score: ' + score.toString(),{ font: "12px Arial", fill: "#ff0044", align: "center" });
+        scoreText.anchor.setTo(0.5,0.5);
         scoreText.fixedToCamera = true;
 
-        tableObjects = this.game.add.group();
         var brick;
         bricks = this.game.add.group();
 
-        g = tableObjects.create(143, 306, 'launcherWall');
-        g.anchor.setTo(0.5,0.5);
-        g.body.bounce.setTo(1,1);
-        g.body.immovable = true;
-
+        emitter = this.game.add.emitter(0,0,400);
+        emitter.makeParticles('particle');
 
         ball.anchor.setTo(0.5,0.5);
         ball.body.collideWorldBounds = true;
-        ball.body.bounce.setTo(0.75, 0.6);
-        ball.body.gravity.y = 20;
+        ball.body.gravity.y = 10;
+        ball.body.bounce.setTo(0.6,0.6);
+        ball.body.maxVelocity.x = 200;
+        ball.body.maxVelocity.y = 400;
 
         paddle.anchor.setTo(0.5,0.5);
         paddle.body.collideWorldBounds = true;
         paddle.body.gravity.y = 100;
 
-        paddle2.anchor.setTo(0.5,0.5);
-        paddle2.body.immovable = true;
-
         for (var i = 0; i < 7; i++)
         {
             for (var j = 0; j < 3; j++)
             {
-                brick = bricks.create(18 * i + 8, 8 * j + 330, 'brick');
-                brick.body.bounce.setTo(1,1);
-                brick.body.immovable = true;
-
-                brick = bricks.create(18 * i + 8, 8 * j + 186, 'brick');
+                brick = bricks.create(18 * i + 16, 8 * j + 15, 'brick');
                 brick.body.bounce.setTo(1,1);
                 brick.body.immovable = true;
             }
         }
-
-        // sets the camera to look at the bottom screen of the table.
-        this.game.camera.y = SH * 2;
 
         this.game.input.onDown.add(this.quitGame, this);
 
@@ -68,15 +52,29 @@ GBJam.Game.prototype = {
 
     update: function () {
 
-        paddle2.x = paddle.x;
+        ball.body.maxVelocity.x = (score / 10) + 200;
+        ball.body.maxVelocity.y = (score / 10) + 350;
 
-        if(ball.y > test && ball.x < 143)
+        if (!launched)
+        {
+            ball.x = paddle.x;
+            ball.y = 120;
+            ball.body.gravity.y = 0;
+        }
+        else
+        {
+            ball.body.gravity.y = 10;
+        }
+
+        if(ball.y > 136 && ball.x < 150)
         {
             if (balls > 1)
             {
                 balls--;
-                ball.x = 153;
-                ball.y = 300;
+                ball.body.velocity.x = 0;
+                ball.body.velocity.y = 0;
+                ball.x = paddle.x;
+                ball.y = paddle.y - 15;
                 launched = false;
                 console.log(balls);
             }
@@ -91,28 +89,18 @@ GBJam.Game.prototype = {
             ball.body.acceleration.x = 0;
         }
 
-        this.game.physics.collide(ball, tableObjects);
-        this.game.physics.collide(paddle, tableObjects);
         this.game.physics.collide(ball, paddle, this.paddleHit);
-        this.game.physics.collide(ball, paddle2, this.paddleHit);
         this.game.physics.collide(ball, bricks, this.brickHit);
-
-        if (ball.y < SH * 2 && launched)
-        {
-            this.game.camera.y = SH * 1;
-        }
-        else
-        {
-            this.game.camera.y = SH * 2;
-        }
+        this.game.physics.collide(emitter, ball);
+        this.game.physics.collide(emitter, bricks);
 
         if (this.game.input.keyboard.isDown(Phaser.Keyboard.LEFT))
         {
-            paddle.body.velocity.x = -250;
+            paddle.body.velocity.x = -300;
         }
         else if (this.game.input.keyboard.isDown(Phaser.Keyboard.RIGHT))
         {
-            paddle.body.velocity.x = 250;
+            paddle.body.velocity.x = 300;
         }
         else if (paddle.body.velocity.x > 0)
         {
@@ -123,16 +111,15 @@ GBJam.Game.prototype = {
             paddle.body.velocity.x += 25;
         }
 
-        if (this.game.input.keyboard.isDown(Phaser.Keyboard.UP))
+        if (this.game.input.keyboard.isDown(Phaser.Keyboard.Z))
         {
             this.launchBall();
         }
 
-        if (this.game.input.keyboard.isDown(Phaser.Keyboard.DOWN))
+        if (this.game.input.keyboard.isDown(Phaser.Keyboard.X))
         {
-            paddle.body.velocity.y = 10;
+            this.reverseGravity();
         }
-
     },
 
     render: function () {
@@ -152,12 +139,17 @@ GBJam.Game.prototype = {
     },
 
     launchBall: function () {
-        if(ball.x > 152 && ball.y > 424)
+        if(!launched)
         {
-            ball.body.velocity.y = -2000;
-            ball.body.acceleration.x = -200;
+            ball.body.velocity.y = -400;
+            ball.body.velocity.x = -200;
             launched = true;
         }
+    },
+
+    reverseGravity: function () {
+        if (launched)
+            ball.body.gravity.y = -10;
     },
 
     paddleHit: function () {
@@ -180,6 +172,10 @@ GBJam.Game.prototype = {
     },
 
     brickHit: function (_ball, _brick) {
+        emitter.x = _brick.x;
+        emitter.y = _brick.y;
+        emitter.start(true, 2000, null, 20);
+
         score += 15;
         scoreText.content = 'Score: ' + score.toString();
         scoreText.update();

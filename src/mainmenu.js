@@ -14,23 +14,23 @@ GBJam.MainMenu.prototype = {
 
         this.add.sprite(0, 0, 'mainBackground');
 
-        this.game.input.keyboard.onDownCallback = this.startGame;
-
         //text = this.add.bitmapText(100, 100, 'test', { font: '8px 04b', align: 'center' });
 
     },
 
     update: function () {
 
-
+        if (this.input.keyboard.justPressed(Phaser.Keyboard.Z))
+        {
+            this.startGame();
+        }
 
     },
 
-    startGame: function (pointer) {
+    startGame: function () {
 
-        //this.music.stop();
-        this.game.input.keyboard.onDownCallback = null;
-        this.game.state.start('Game');
+            this.game.input.keyboard.onDownCallback = null;
+            this.game.state.start('Game');
 
     }
 
