@@ -18,7 +18,7 @@ GBJam.Boot.prototype = {
 
         this.game.input.maxPointers = 1;
 
-        this.game.stage.disableVisibilityChange = true;
+        //this.game.stage.disableVisibilityChange = true;
 
         if (this.game.device.desktop)
         {
