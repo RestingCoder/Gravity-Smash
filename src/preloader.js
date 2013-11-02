@@ -24,6 +24,9 @@ GBJam.Preloader.prototype = {
 
         this.load.image('table', './bin/sprites/table.png');
         this.load.image('ball', './bin/sprites/ball.png');
+        this.load.image('launcherWall', './bin/sprites/launcherWall.png');
+        this.load.image('paddle', './bin/sprites/paddle.png');
+        this.load.image('brick', './bin/sprites/brick.png');
 
     },
 
