@@ -12,6 +12,7 @@ GBJam.Game.prototype = {
 
         balls = 3;
         score = 0;
+        launched = false;
 
         this.game.world.setBounds(0, 0, 160, 432);
         table = this.game.add.sprite(0,0,'table');
@@ -76,6 +77,7 @@ GBJam.Game.prototype = {
                 balls--;
                 ball.x = 153;
                 ball.y = 300;
+                launched = false;
                 console.log(balls);
             }
             else
@@ -95,7 +97,7 @@ GBJam.Game.prototype = {
         this.game.physics.collide(ball, paddle2, this.paddleHit);
         this.game.physics.collide(ball, bricks, this.brickHit);
 
-        if (ball.y < SH * 2)
+        if (ball.y < SH * 2 && launched)
         {
             this.game.camera.y = SH * 1;
         }
@@ -154,6 +156,7 @@ GBJam.Game.prototype = {
         {
             ball.body.velocity.y = -2000;
             ball.body.acceleration.x = -200;
+            launched = true;
         }
     },
 
