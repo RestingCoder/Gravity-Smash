@@ -17,7 +17,7 @@ GBJam.Game.prototype = {
         table = this.game.add.sprite(0,0,'table');
         ball = this.game.add.sprite(153, SH * 2 + 400, 'ball');
         paddle = this.game.add.sprite(this.game.world.centerX, 500, 'paddle');
-        paddle2 = this.game.add.sprite(this.game.world.centerX, 284, 'paddle');
+        paddle2 = this.game.add.sprite(this.game.world.centerX, 285, 'paddle');
 
         scoreText = this.game.add.text(this.game.world.centerX,300,'Score: ' + score.toString(),{ font: "12px Arial", fill: "#ff0044", align: "right" });
         scoreText.fixedToCamera = true;
@@ -95,7 +95,7 @@ GBJam.Game.prototype = {
         this.game.physics.collide(ball, paddle2, this.paddleHit);
         this.game.physics.collide(ball, bricks, this.brickHit);
 
-        if (ball.y < SH * 2 && ball.x < 143)
+        if (ball.y < SH * 2)
         {
             this.game.camera.y = SH * 1;
         }
