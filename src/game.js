@@ -20,10 +20,11 @@ GBJam.Game.prototype = {
         table = this.game.add.sprite(0,0,'table');
         ball = this.game.add.sprite(0, 0, 'ball');
         paddle = this.game.add.sprite(this.game.world.centerX, 130, 'paddle');
+        gravityBar = this.game.add.sprite(2,2,'gravityBar');
 
-        scoreText = this.game.add.text(this.game.world.centerX, this.game.world.centerY - 30,'Score: ' + score.toString(),{ font: "12px Arial", fill: "#ff0044", align: "center" });
-        scoreText.anchor.setTo(0.5,0.5);
-        scoreText.fixedToCamera = true;
+        //scoreText = this.game.add.text(this.game.world.centerX, this.game.world.centerY - 30,'Score: ' + score.toString(),{ font: "12px Arial", fill: "#ff0044", align: "center" });
+        //scoreText.anchor.setTo(0.5,0.5);
+        //scoreText.fixedToCamera = true;
 
         var brick;
         bricks = this.game.add.group();
@@ -42,14 +43,13 @@ GBJam.Game.prototype = {
         paddle.body.collideWorldBounds = true;
         paddle.body.gravity.y = 100;
 
-        this.loadLevel(currentLevel);
-
-        gravityBar = this.game.add.sprite(2,2,'gravityBar');
         gravityBar.cropEnabled = true;
 
         hitSound = this.game.add.audio('hit');
         noEnergySound = this.game.add.audio('noEnergy');
         crashSound = this.game.add.audio('crash');
+
+        this.loadLevel(currentLevel);
 
         this.game.input.onDown.add(this.quitGame, this);
 
@@ -155,8 +155,19 @@ GBJam.Game.prototype = {
     quitGame: function (pointer) {
 
         // TODO: Stop music, delete sprites, purge caches, free resources, all that good stuff.
+        balls = 3;
+        score = 0;
+        launched = false;
+        gravityJuice = 156;
+        currentLevel = 1;
+
         table.kill();
         ball.kill();
+        paddle.kill();
+        gravityBar.kill();
+        //scoreText.destroy();
+        bricks.destroy();
+        emitter.kill();
 
         this.game.state.start('MainMenu');
 
@@ -187,8 +198,8 @@ GBJam.Game.prototype = {
     paddleHit: function () {
 
         score += 10;
-        scoreText.content = 'Score: ' + score.toString();
-        scoreText.update();
+        //scoreText.content = 'Score: ' + score.toString();
+        //scoreText.update();
 
         ball.body.acceleration.x = 0;
         ball.body.velocity.y = -700;
@@ -208,11 +219,11 @@ GBJam.Game.prototype = {
         hitSound.play();
         emitter.x = _brick.x;
         emitter.y = _brick.y;
-        emitter.start(true, 2000, null, 20);
+        emitter.start(true, 2000, null, 30);
 
         score += 15;
-        scoreText.content = 'Score: ' + score.toString();
-        scoreText.update();
+        //scoreText.content = 'Score: ' + score.toString();
+        //scoreText.update();
 
         _brick.destroy();
     }
