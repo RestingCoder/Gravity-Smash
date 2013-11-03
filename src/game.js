@@ -10,6 +10,11 @@ GBJam.Game.prototype = {
         score = 0;
         launched = false;
         gravityJuice = 156;
+        currentLevel = 1;
+
+        levels = [0,0,0,0,0,0,0,1,
+                  1,1,1,1,1,1,1,1,
+                  1,1,1,1,0,1,0,0];
 
         this.game.world.setBounds(0, 0, 160, 144);
         table = this.game.add.sprite(0,0,'table');
@@ -37,18 +42,14 @@ GBJam.Game.prototype = {
         paddle.body.collideWorldBounds = true;
         paddle.body.gravity.y = 100;
 
-        for (var i = 0; i < 7; i++)
-        {
-            for (var j = 0; j < 3; j++)
-            {
-                brick = bricks.create(18 * i + 16, 8 * j + 15, 'brick');
-                brick.body.bounce.setTo(1,1);
-                brick.body.immovable = true;
-            }
-        }
+        this.loadLevel(currentLevel);
 
         gravityBar = this.game.add.sprite(2,2,'gravityBar');
         gravityBar.cropEnabled = true;
+
+        hitSound = this.game.add.audio('hit');
+        noEnergySound = this.game.add.audio('noEnergy');
+        crashSound = this.game.add.audio('crash');
 
         this.game.input.onDown.add(this.quitGame, this);
 
@@ -57,7 +58,6 @@ GBJam.Game.prototype = {
     update: function () {
 
         gravityBar.crop.x = Phaser.Math.clamp(156 - gravityJuice, 0, 156);
-        console.log(gravityBar.crop.x);
 
         ball.body.maxVelocity.x = (score / 10) + 200;
         ball.body.maxVelocity.y = (score / 10) + 350;
@@ -73,17 +73,22 @@ GBJam.Game.prototype = {
             ball.body.gravity.y = 10;
         }
 
-        if(ball.y > 136 && ball.x < 150)
+        if(ball.y > 136)
         {
             if (balls > 1)
             {
+                crashSound.play();
                 balls--;
                 ball.body.velocity.x = 0;
                 ball.body.velocity.y = 0;
                 ball.x = paddle.x;
                 ball.y = paddle.y - 15;
                 launched = false;
-                console.log(balls);
+
+                if (gravityJuice < 100)
+                {
+                    gravityJuice = 100;
+                }
             }
             else
             {
@@ -135,6 +140,18 @@ GBJam.Game.prototype = {
 
     },
 
+    loadLevel: function (l) {
+        for (var i = 0; i < 7; i++)
+        {
+            for (var j = 0; j < 3; j++)
+            {
+                brick = bricks.create(18 * i + 16, 8 * j + 15, 'brick');
+                brick.body.bounce.setTo(1,1);
+                brick.body.immovable = true;
+            }
+        }
+    },
+
     quitGame: function (pointer) {
 
         // TODO: Stop music, delete sprites, purge caches, free resources, all that good stuff.
@@ -160,6 +177,11 @@ GBJam.Game.prototype = {
             ball.body.gravity.y = -10;
             gravityJuice -= 1;
         }
+        else
+        {
+            if (!noEnergySound.isPlaying)
+                noEnergySound.play();
+        }
     },
 
     paddleHit: function () {
@@ -182,6 +204,8 @@ GBJam.Game.prototype = {
     },
 
     brickHit: function (_ball, _brick) {
+
+        hitSound.play();
         emitter.x = _brick.x;
         emitter.y = _brick.y;
         emitter.start(true, 2000, null, 20);

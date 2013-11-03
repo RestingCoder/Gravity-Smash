@@ -19,6 +19,8 @@ GBJam.Preloader.prototype = {
 
         this.load.setPreloadSprite(this.progressBar);
 
+        this.load.image('startInfo', './bin/sprites/startInfo.png');
+
         this.load.audio('titleMusic', ['./bin/audio/bgm.mp3']);
         //this.load.bitmapFont('04b', './bin/fonts/04b_0.png', './bin/fonts/04b.xml');
 
@@ -29,6 +31,10 @@ GBJam.Preloader.prototype = {
         this.load.image('brick', './bin/sprites/brick.png');
         this.load.image('particle', './bin/sprites/particle.png');
         this.load.image('gravityBar', './bin/sprites/gravityBar.png');
+
+        this.load.audio('hit', ['./bin/audio/hit.mp3']);
+        this.load.audio('noEnergy', ['./bin/audio/noEnergy.mp3']);
+        this.load.audio('crash', ['./bin/audio/crash.mp3']);
 
     },
 
