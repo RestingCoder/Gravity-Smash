@@ -13,7 +13,7 @@ GBJam.MainMenu.prototype = {
         //this.music.play('', 0, 1, true);
 
         this.add.sprite(0, 0, 'mainBackground');
-        startInfo = this.add.sprite(this.game.world.centerX, 100, 'startInfo');
+        startInfo = this.add.sprite(this.game.world.centerX, 110, 'startInfo');
         startInfo.anchor.setTo(0.5,0.5);
 
         //text = this.add.bitmapText(100, 100, 'test', { font: '8px 04b', align: 'center' });

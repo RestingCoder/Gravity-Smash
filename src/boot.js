@@ -23,11 +23,6 @@ GBJam.Boot.prototype = {
         if (this.game.device.desktop)
         {
             this.game.stage.scale.pageAlignHorizontally = true;
-            this.game.stage.scale.minWidth = 160;
-            this.game.stage.scale.minHeight = 144;
-            this.game.stage.scale.maxWidth = 160;
-            this.game.stage.scale.maxHeight = 144;
-            this.game.stage.scale.setScreenSize(true);
         }
         else
         {

@@ -1,0 +1,21 @@
+body{
+    background: url('./bin/gb.png') no-repeat top center #333;
+    color: #ddd;
+}
+#gameContainer{
+    margin:117px auto;
+    width: 160px;
+    height: 144px;
+    border: solid thin black;
+}
+#gameInfo{
+    text-align: center;
+    width: 400px;
+    margin:300px auto;
+}
+pre{
+    text-align: left;
+    border: dotted thin #666;
+    padding-top: 10px;
+    background: #444;
+}
