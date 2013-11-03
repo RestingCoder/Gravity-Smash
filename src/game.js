@@ -9,6 +9,7 @@ GBJam.Game.prototype = {
         balls = 3;
         score = 0;
         launched = false;
+        gravityJuice = 156;
 
         this.game.world.setBounds(0, 0, 160, 144);
         table = this.game.add.sprite(0,0,'table');
@@ -46,11 +47,17 @@ GBJam.Game.prototype = {
             }
         }
 
+        gravityBar = this.game.add.sprite(2,2,'gravityBar');
+        gravityBar.cropEnabled = true;
+
         this.game.input.onDown.add(this.quitGame, this);
 
     },
 
     update: function () {
+
+        gravityBar.crop.x = Phaser.Math.clamp(156 - gravityJuice, 0, 156);
+        console.log(gravityBar.crop.x);
 
         ball.body.maxVelocity.x = (score / 10) + 200;
         ball.body.maxVelocity.y = (score / 10) + 350;
@@ -148,8 +155,11 @@ GBJam.Game.prototype = {
     },
 
     reverseGravity: function () {
-        if (launched)
+        if (launched && gravityJuice > 0)
+        {
             ball.body.gravity.y = -10;
+            gravityJuice -= 1;
+        }
     },
 
     paddleHit: function () {
