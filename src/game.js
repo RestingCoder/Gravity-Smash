@@ -19,7 +19,7 @@ GBJam.Game.prototype = {
         this.game.world.setBounds(0, 0, 160, 144);
         table = this.game.add.sprite(0,0,'table');
         ball = this.game.add.sprite(0, 0, 'ball');
-        paddle = this.game.add.sprite(this.game.world.centerX, 130, 'paddle');
+        paddle = this.game.add.sprite(this.game.world.centerX, 139, 'paddle');
         gravityBar = this.game.add.sprite(2,2,'gravityBar');
 
         //scoreText = this.game.add.text(this.game.world.centerX, this.game.world.centerY - 30,'Score: ' + score.toString(),{ font: "12px Arial", fill: "#ff0044", align: "center" });
@@ -41,6 +41,7 @@ GBJam.Game.prototype = {
 
         paddle.anchor.setTo(0.5,0.5);
         paddle.body.collideWorldBounds = true;
+        paddle.body.immovable = true;
         paddle.body.gravity.y = 100;
 
         gravityBar.cropEnabled = true;
@@ -65,7 +66,7 @@ GBJam.Game.prototype = {
         if (!launched)
         {
             ball.x = paddle.x;
-            ball.y = 120;
+            ball.y = 125;
             ball.body.gravity.y = 0;
         }
         else
