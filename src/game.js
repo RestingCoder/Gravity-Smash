@@ -26,11 +26,11 @@ GBJam.Game.prototype = {
         table = this.game.add.sprite(0,0,'table');
         ball = this.game.add.sprite(0, 0, 'ball');
         paddle = this.game.add.sprite(this.game.world.centerX, 139, 'paddle');
-        gravityBar = this.game.add.sprite(2,2,'gravityBar');
+        gravityBar = this.game.add.sprite(2,10,'gravityBar');
 
-        //scoreText = this.game.add.text(this.game.world.centerX, this.game.world.centerY - 30,'Score: ' + score.toString(),{ font: "12px Arial", fill: "#ff0044", align: "center" });
+        scoreText = this.game.add.bitmapText(2, 2, score.toString(),{ font: "8px PokemonGB", align: "center" });
+        ballText = this.game.add.bitmapText(this.game.world.width - 10, 2, balls.toString(),{ font: "8px PokemonGB", align: "center" });
         //scoreText.anchor.setTo(0.5,0.5);
-        //scoreText.fixedToCamera = true;
 
         var brick;
         bricks = this.game.add.group();
@@ -43,18 +43,19 @@ GBJam.Game.prototype = {
         ball.body.gravity.y = 10;
         ball.body.bounce.setTo(0.6,0.6);
         ball.body.maxVelocity.x = 200;
-        ball.body.maxVelocity.y = 400;
+        ball.body.maxVelocity.y = 350;
 
         paddle.anchor.setTo(0.5,0.5);
         paddle.body.collideWorldBounds = true;
         paddle.body.immovable = true;
-        paddle.body.gravity.y = 100;
+        paddle.body.setSize(paddle.width + 4, paddle.height, 0, 0);
 
         gravityBar.cropEnabled = true;
 
         hitSound = this.game.add.audio('hit');
         noEnergySound = this.game.add.audio('noEnergy');
         crashSound = this.game.add.audio('crash');
+        gameOverSound = this.game.add.audio('crash');
 
         this.loadLevel(currentLevel);
 
@@ -66,8 +67,8 @@ GBJam.Game.prototype = {
 
         gravityBar.crop.x = Phaser.Math.clamp(156 - gravityJuice, 0, 156);
 
-        ball.body.maxVelocity.x = (score / 10) + 200;
-        ball.body.maxVelocity.y = (score / 10) + 350;
+        ball.body.maxVelocity.x = Phaser.Math.clamp((score / 10) + 200, 0, 450);
+        ball.body.maxVelocity.y = Phaser.Math.clamp((score / 10) + 350, 0, 450);
 
         if (!launched)
         {
@@ -82,25 +83,7 @@ GBJam.Game.prototype = {
 
         if(ball.y > 136)
         {
-            if (balls > 1)
-            {
-                crashSound.play();
-                //balls--;
-                ball.body.velocity.x = 0;
-                ball.body.velocity.y = 0;
-                ball.x = paddle.x;
-                ball.y = paddle.y - 15;
-                launched = false;
-            }
-            else
-            {
-                this.quitGame(this);
-            }
-        }
-
-        if (ball.x < 132)
-        {
-            ball.body.acceleration.x = 0;
+            this.killBall();
         }
 
         this.game.physics.collide(ball, paddle, this.paddleHit);
@@ -111,19 +94,19 @@ GBJam.Game.prototype = {
 
         if (this.game.input.keyboard.isDown(Phaser.Keyboard.LEFT))
         {
-            paddle.body.velocity.x = -300;
+            paddle.body.velocity.x = -250;
         }
         else if (this.game.input.keyboard.isDown(Phaser.Keyboard.RIGHT))
         {
-            paddle.body.velocity.x = 300;
+            paddle.body.velocity.x = 250;
         }
         else if (paddle.body.velocity.x > 0)
         {
-            paddle.body.velocity.x -= 25;
+            paddle.body.velocity.x -= 50;
         }
         else if (paddle.body.velocity.x < 0)
         {
-            paddle.body.velocity.x += 25;
+            paddle.body.velocity.x += 50;
         }
 
         if (this.game.input.keyboard.isDown(Phaser.Keyboard.Z))
@@ -139,8 +122,6 @@ GBJam.Game.prototype = {
 
     render: function () {
 
-
-
     },
 
     loadLevel: function (c) {
@@ -150,7 +131,7 @@ GBJam.Game.prototype = {
             {
                 if(levels[c-1][j][i] == 1)
                 {
-                    brick = bricks.create(18 * i + 8, 8 * j + 15, 'brick');
+                    brick = bricks.create(17 * i + 12, 7 * j + 15, 'brick');
                     brick.body.bounce.setTo(1,1);
                     brick.body.immovable = true;
                 }
@@ -171,11 +152,10 @@ GBJam.Game.prototype = {
         ball.kill();
         paddle.kill();
         gravityBar.kill();
-        //scoreText.destroy();
         bricks.destroy();
         emitter.kill();
 
-        this.game.state.start('MainMenu');
+        this.game.state.start('GameOver');
 
     },
 
@@ -183,15 +163,35 @@ GBJam.Game.prototype = {
         if(!launched)
         {
             ball.body.velocity.y = -400;
-            ball.body.velocity.x = -200;
+            ball.body.velocity.x = (this.game.world.centerX - paddle.x) * 2;
             launched = true;
+        }
+    },
+
+    killBall: function () {
+        if (balls > 1)
+        {
+            crashSound.play();
+            balls--;
+            ballText.setText(balls.toString());
+            ballText.update();
+            ball.body.velocity.x = 0;
+            ball.body.velocity.y = 0;
+            ball.x = paddle.x;
+            ball.y = paddle.y - 15;
+            launched = false;
+        }
+        else
+        {
+            gameOverSound.play();
+            this.quitGame(this);
         }
     },
 
     reverseGravity: function () {
         if (launched && gravityJuice > 0)
         {
-            ball.body.gravity.y = -10;
+            ball.body.gravity.y = -15;
             gravityJuice -= 1;
         }
         else
@@ -204,9 +204,9 @@ GBJam.Game.prototype = {
     paddleHit: function () {
 
         hitSound.play();
-        score += 10;
-        //scoreText.content = 'Score: ' + score.toString();
-        //scoreText.update();
+        score += 5;
+        scoreText.setText(score.toString());
+        scoreText.update();
 
         ball.body.acceleration.x = 0;
         ball.body.velocity.y = -700;
@@ -226,9 +226,9 @@ GBJam.Game.prototype = {
         hitSound.play();
         emitter.x = _brick.x;
         emitter.y = _brick.y;
-        emitter.start(true, 2000, null, 50);
+        emitter.start(true, 2000, null, 25);
 
-        score += 15;
+        score += 10;
         if (gravityJuice < 156)
         {
             gravityJuice += 15;
@@ -248,8 +248,8 @@ GBJam.Game.prototype = {
             this.loadLevel(currentLevel);
             gravityJuice = 156;
         }
-        //scoreText.content = 'Score: ' + score.toString();
-        //scoreText.update();
+        scoreText.setText(score.toString());
+        scoreText.update();
 
         _brick.destroy();
     }

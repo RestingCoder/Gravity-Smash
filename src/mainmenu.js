@@ -31,7 +31,6 @@ GBJam.MainMenu.prototype = {
 
     startGame: function () {
 
-            this.game.input.keyboard.onDownCallback = null;
             this.game.state.start('Game');
 
     }

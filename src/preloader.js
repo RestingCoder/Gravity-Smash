@@ -22,7 +22,7 @@ GBJam.Preloader.prototype = {
         this.load.image('startInfo', './bin/sprites/startInfo.png');
 
         this.load.audio('titleMusic', ['./bin/audio/bgm.mp3']);
-        //this.load.bitmapFont('04b', './bin/fonts/04b_0.png', './bin/fonts/04b.xml');
+        this.load.bitmapFont('font', './bin/fonts/font.png', './bin/fonts/font.fnt');
 
         this.load.image('table', './bin/sprites/table.png');
         this.load.image('ball', './bin/sprites/ball.png');
