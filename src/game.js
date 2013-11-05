@@ -190,6 +190,21 @@ GBJam.Game.prototype = {
         }
         else
         {
+            if(typeof(Storage)!=="undefined")
+            {
+                localStorage.score = score;
+                if (localStorage.highScore)
+                {
+                    if (score > localStorage.highScore)
+                    {
+                        localStorage.highScore = score;
+                    }
+                }
+                else
+                {
+                    localStorage.highScore = score;
+                }
+            }
             gameOverSound.play();
             this.quitGame(this);
         }
