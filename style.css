@@ -3,10 +3,12 @@ body{
     color: #ddd;
 }
 #gameContainer{
-    margin:117px auto;
+    margin:116px auto;
     width: 160px;
     height: 144px;
-    border: solid thin black;
+    border: solid 2px #193441;
+    border-bottom-color: #91aa9d;
+    border-left-color: #91aa9d;
 }
 #gameInfo{
     text-align: center;

@@ -16,24 +16,25 @@ GBJam.Game.prototype = {
                    [1,1,1,1,1,1,1,1],
                    [1,1,1,1,1,1,1,1]],
                   [[1,1,1,1,1,1,1,1],
-                   [0,0,0,0,0,0,0,0],
-                   [1,1,1,1,1,1,1,1]],
+                   [1,1,1,1,1,1,1,1],
+                   [2,1,1,1,1,1,1,2]],
                   [[1,0,1,1,1,1,0,1],
                    [1,0,1,1,1,1,0,1],
                    [1,1,1,0,0,1,1,1]]];
 
         this.game.world.setBounds(0, 0, 160, 144);
-        table = this.game.add.sprite(0,0,'table');
         ball = this.game.add.sprite(0, 0, 'ball');
         paddle = this.game.add.sprite(this.game.world.centerX, 139, 'paddle');
         gravityBar = this.game.add.sprite(2,10,'gravityBar');
 
         scoreText = this.game.add.bitmapText(2, 2, score.toString(),{ font: "8px PokemonGB", align: "center" });
+        levelText = this.game.add.bitmapText(this.game.world.centerX, 2, 'Level ' + currentLevel.toString(),{ font: "8px PokemonGB", align: "center" });
+        levelText.anchor.setTo(0.5,0);
         ballText = this.game.add.bitmapText(this.game.world.width - 10, 2, balls.toString(),{ font: "8px PokemonGB", align: "center" });
         //scoreText.anchor.setTo(0.5,0.5);
 
-        var brick;
         bricks = this.game.add.group();
+        bricks2 = this.game.add.group();
 
         emitter = this.game.add.emitter(0,0,400);
         emitter.makeParticles('particle');
@@ -88,6 +89,7 @@ GBJam.Game.prototype = {
 
         this.game.physics.collide(ball, paddle, this.paddleHit);
         this.game.physics.collide(ball, bricks, this.brickHit, null, this);
+        this.game.physics.collide(ball, bricks2);
         this.game.physics.collide(emitter, ball);
         this.game.physics.collide(emitter, bricks);
         this.game.physics.collide(emitter, paddle);
@@ -125,6 +127,7 @@ GBJam.Game.prototype = {
     },
 
     loadLevel: function (c) {
+
         for (var i = 0; i < 8; i++)
         {
             for (var j = 0; j < 3; j++)
@@ -134,6 +137,12 @@ GBJam.Game.prototype = {
                     brick = bricks.create(17 * i + 12, 7 * j + 15, 'brick');
                     brick.body.bounce.setTo(1,1);
                     brick.body.immovable = true;
+                }
+                if(levels[c-1][j][i] == 2)
+                {
+                    brick2 = bricks2.create(17 * i + 12, 7 * j + 15, 'brick2');
+                    brick2.body.bounce.setTo(1,1);
+                    brick2.body.immovable = true;
                 }
             }
         }
@@ -148,11 +157,11 @@ GBJam.Game.prototype = {
         gravityJuice = 156;
         currentLevel = 1;
 
-        table.kill();
         ball.kill();
         paddle.kill();
         gravityBar.kill();
         bricks.destroy();
+        bricks2.destroy();
         emitter.kill();
 
         this.game.state.start('GameOver');
@@ -231,7 +240,7 @@ GBJam.Game.prototype = {
         score += 10;
         if (gravityJuice < 156)
         {
-            gravityJuice += 15;
+            gravityJuice += 10;
             gravityJuice = Phaser.Math.clamp(gravityJuice, 0, 156);
         }
 
@@ -245,12 +254,18 @@ GBJam.Game.prototype = {
             {
                 currentLevel = 1;
             }
+            bricks2.forEachAlive(killBricks2, this);
             this.loadLevel(currentLevel);
+            levelText.setText('Level ' + currentLevel.toString());
+            levelText.update();
             gravityJuice = 156;
         }
         scoreText.setText(score.toString());
         scoreText.update();
 
-        _brick.destroy();
+        _brick.kill();
     }
 };
+function killBricks2(_brick2) {
+    _brick2.kill();
+}
