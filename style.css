@@ -2,6 +2,8 @@ body{
     background-color:#333333;
     /*background: url('./bin/gb.png') no-repeat top center #333;*/
     color: #ddd;
+    font-family: 'Noto Sans', sans-serif;
+    font-weight: 400;
 }
 #wrapper{
     margin: auto;

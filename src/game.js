@@ -60,8 +60,6 @@ GBJam.Game.prototype = {
 
         this.loadLevel(currentLevel);
 
-        this.game.input.onDown.add(this.quitGame, this);
-
     },
 
     update: function () {
@@ -96,19 +94,19 @@ GBJam.Game.prototype = {
 
         if (this.game.input.keyboard.isDown(Phaser.Keyboard.LEFT))
         {
-            paddle.body.velocity.x = -250;
+            paddle.body.velocity.x = -275;
         }
         else if (this.game.input.keyboard.isDown(Phaser.Keyboard.RIGHT))
         {
-            paddle.body.velocity.x = 250;
+            paddle.body.velocity.x = 275;
         }
         else if (paddle.body.velocity.x > 0)
         {
-            paddle.body.velocity.x -= 50;
+            paddle.body.velocity.x = 0;//paddle.body.velocity.x -= 50;
         }
         else if (paddle.body.velocity.x < 0)
         {
-            paddle.body.velocity.x += 50;
+            paddle.body.velocity.x = 0;//paddle.body.velocity.x += 50;
         }
 
         if (this.game.input.keyboard.isDown(Phaser.Keyboard.Z))
