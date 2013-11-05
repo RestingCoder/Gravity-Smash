@@ -1,9 +1,24 @@
 body{
-    background: url('./bin/gb.png') no-repeat top center #333;
+    background-color:#333333;
+    /*background: url('./bin/gb.png') no-repeat top center #333;*/
     color: #ddd;
 }
+#wrapper{
+    margin: auto;
+    border: solid thin #333;
+    width: 404px;
+    height: 532px;
+    background: url('./bin/gb.png') no-repeat top center #333;
+}
+#pageLogo{
+    margin: auto;
+    background: url('./bin/pageLogo.png') no-repeat;
+    width: 168px;
+    height: 73px;
+    text-indent: -9999px;
+}
 #gameContainer{
-    margin:116px auto;
+    margin: 68px auto;
     width: 160px;
     height: 144px;
     border: solid 2px #193441;
@@ -13,7 +28,7 @@ body{
 #gameInfo{
     text-align: center;
     width: 400px;
-    margin:300px auto;
+    margin: 0 auto;
 }
 pre{
     text-align: left;
